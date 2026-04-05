@@ -1,11 +1,22 @@
 import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcryptjs";
+import z from "zod";
+
+const signupSchema = z.object({
+  username: z.string(),
+  password: z.string().min(6),
+  confirmPassword: z.string().min(6),
+  gender: z.enum(["male", "female"], {
+    message: "性別は male または female を選択してください",
+  }),
+});
 
 export async function signup(req: Request, res: Response) {
   // console.log("Signup User");
   try {
-    const { username, password, confirmPassword, gender } = req.body;
+    const validateBody = signupSchema.parse(req.body);
+    const { username, password, confirmPassword, gender } = validateBody;
     if (password !== confirmPassword)
       return res.status(400).json({ error: "パスワードが一致しません" });
     const user = await User.findOne({ username });
