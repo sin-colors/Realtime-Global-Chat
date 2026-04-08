@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user.model";
 import bcrypt from "bcryptjs";
 import z from "zod";
+import generateTokenAndSetCookie from "../utils/generateToken";
 
 const signupSchema = z.object({
   username: z.string(),
@@ -37,6 +38,7 @@ export async function signup(req: Request, res: Response) {
       profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
     });
     if (newUser) {
+      generateTokenAndSetCookie(newUser._id, res);
       await newUser.save();
       res.status(201).json({
         _id: newUser._id,
