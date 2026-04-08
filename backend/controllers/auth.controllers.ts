@@ -48,6 +48,23 @@ export async function signup(req: Request, res: Response) {
       res.status(400).json({ error: "作成されたユーザーのデータがありません" });
     }
   } catch (err) {
+    // 1. バリデーションエラー（Zod）の場合
+    if (err instanceof z.ZodError) {
+      console.log("バリデーションに失敗しました:", err.issues);
+      return res.status(400).json({
+        error: "入力内容が正しくありません",
+        details: err.issues, // どの項目がエラーか詳細を返すことも可能
+      });
+      // // format() を使うと { username: { _errors: [...] }, password: ... } のような形になる
+      // // 非推奨: const formattedErrors = err.format();
+      // // 推奨: z.treeifyError(err) を使う。表示のされ方は同じ。
+      // const formattedErrors = z.treeifyError(err);
+      // console.log("バリデーションに失敗しました:", formattedErrors);
+      // return res.status(400).json({
+      //   error: "入力内容が正しくありません",
+      //   details: formattedErrors,
+      // });
+    }
     if (err instanceof Error) {
       console.log("signup controllerでエラーが発生しました", err.message);
     } else {
