@@ -124,5 +124,18 @@ export async function login(req: Request, res: Response) {
   }
 }
 export function logout(req: Request, res: Response) {
-  console.log("Logout User");
+  // console.log("Logout User");
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "正常にログアウトしました" });
+  } catch (err) {
+    if (err instanceof Error) {
+      console.log("Logout Controllerでエラーが発生しました", err.message);
+    } else {
+      console.log("Logout Controllerでエラーが発生しました", err);
+    }
+    res
+      .status(500)
+      .json({ error: "ログアウト実行中にサーバー内でエラーが発生しました" });
+  }
 }
