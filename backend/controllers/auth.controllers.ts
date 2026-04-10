@@ -77,8 +77,51 @@ export async function signup(req: Request, res: Response) {
       .json({ error: "サインアップ実行中にサーバー内でエラーが発生しました" });
   }
 }
-export function login(req: Request, res: Response) {
-  console.log("Login User");
+
+const loginSchema = z.object({
+  username: z.string(),
+  password: z.string().min(6),
+});
+
+export async function login(req: Request, res: Response) {
+  // console.log("Login User");
+  try {
+    const validateBody = loginSchema.parse(req.body);
+    const { username, password } = validateBody;
+    const user = await User.findOne({ username });
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      user?.password || "",
+    );
+    if (!user || !isPasswordCorrect)
+      return res
+        .status(400)
+        .json({ error: "ユーザー名またはパスワードが間違っています" });
+    generateTokenAndSetCookie(user._id, res);
+    res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      gender: user.gender,
+      profilePic: user.profilePic,
+    });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      const formattedErrors = z.treeifyError(err);
+      console.log("バリデーションに失敗しました", formattedErrors);
+      return res.status(400).json({
+        error: "入力内容が正しくありません",
+        details: formattedErrors,
+      });
+    }
+    if (err instanceof Error) {
+      console.log("Login Controllerでエラーが発生しました", err.message);
+    } else {
+      console.log("Login Controllerでエラーが発生しました", err);
+    }
+    res
+      .status(500)
+      .json({ error: "ログイン実行中にサーバー内でエラーが発生しました" });
+  }
 }
 export function logout(req: Request, res: Response) {
   console.log("Logout User");
