@@ -1,0 +1,96 @@
+@baseUrl = http://localhost:5000
+
+# 正常なユーザー登録
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "Mike",
+  "password": "password12345",
+  "confirmPassword": "password12345",
+  "gender": "male"
+}
+
+###
+# パスワードと確認パスワードが一致しない場合
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "Bob",
+  "password": "password12345",
+  "confirmPassword": "password1234",
+  "gender": "male"
+}
+
+###
+# genderフィールドの値が間違っている場合
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "Jane",
+  "password": "password12345",
+  "confirmPassword": "password12345",
+  "gender": "man"
+}
+
+###
+# 正しいユーザー登録(二人目)
+POST {{baseUrl}}/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "Jane",
+  "password": "password12345",
+  "confirmPassword": "password12345",
+  "gender": "female"
+}
+
+###
+# 登録されていないユーザー名
+POST {{baseUrl}}/api/auth/login
+
+{
+  "username": "Bob",
+  "password": "password12345"
+}
+
+###
+# 正しいログイン
+POST {{baseUrl}}/api/auth/login
+
+{
+  "username": "Mike",
+  "password": "password12345"
+}
+
+###
+# パスワードを間違えた場合のログイン
+POST {{baseUrl}}/api/auth/login
+
+{
+  "username": "Mike",
+  "password": "password1234"
+}
+
+###
+# 不要なフィールド(genderフィールド)を指定した場合
+POST {{baseUrl}}/api/auth/login
+
+{
+  "username": "Mike",
+  "password": "password1234",
+  "gender": "male"
+}
+
+###
+# 正しいログアウト
+POST {{baseUrl}}/api/auth/logout
+
+###
+POST {{baseUrl}}/api/messages/send
+
+{
+  "message": "おはようございます"
+}
