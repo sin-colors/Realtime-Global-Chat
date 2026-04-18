@@ -2,9 +2,18 @@
 
 # メッセージ送信のテスト
 POST {{baseUrl}}/api/messages/send
+Content-Type: application/json
 
 {
   "message": "おはようございます"
+}
+
+###
+POST {{baseUrl}}/api/messages/send
+Content-Type: application/json
+
+{
+  "message": "お疲れ様です"
 }
 
 ###
