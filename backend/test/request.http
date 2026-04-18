@@ -88,9 +88,3 @@ POST {{baseUrl}}/api/auth/login
 # 正しいログアウト
 POST {{baseUrl}}/api/auth/logout
 
-###
-POST {{baseUrl}}/api/messages/send
-
-{
-  "message": "おはようございます"
-}

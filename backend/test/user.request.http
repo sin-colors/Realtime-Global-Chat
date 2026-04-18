@@ -1,0 +1,4 @@
+@baseUrl = http://localhost:5000
+
+# 自分以外のすべてのユーザーを取得するテスト
+GET {{baseUrl}}/api/users

@@ -1,0 +1,13 @@
+@baseUrl = http://localhost:5000
+
+# メッセージ送信のテスト
+POST {{baseUrl}}/api/messages/send
+
+{
+  "message": "おはようございます"
+}
+
+###
+#メッセージ取得（全件取得）のテスト
+GET {{baseUrl}}/api/messages
+
