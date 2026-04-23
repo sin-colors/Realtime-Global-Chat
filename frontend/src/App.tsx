@@ -1,7 +1,16 @@
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+
 function App() {
   return (
-    <div className="flex w-full items-center justify-center">
-      <h1 className="text-3xl">Group Chat Application</h1>
+    <div className="flex h-screen w-full items-center justify-center md:p-4">
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
     </div>
   );
 }
