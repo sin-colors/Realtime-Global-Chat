@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -28,11 +29,6 @@ function Signup() {
   });
 
   const { signup } = useSignup();
-
-  // 処理は一旦コンソールに受け取った値を表示するだけ
-  // function register(value: RegisterType) {
-  //   console.log(value);
-  // }
 
   return (
     <div className="flex min-h-screen min-w-96 items-center justify-center p-4">
@@ -151,15 +147,31 @@ function Signup() {
                   </Field>
                 )}
               />
-              <p className="text-sm text-gray-300">
-                アカウントを持っている方は
-                <Link
-                  to="/login"
-                  className="mx-1 inline-block text-yellow-500 hover:text-yellow-400 hover:underline"
-                >
-                  ログインへ
-                </Link>
-              </p>
+              <Controller
+                name="company"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel className="text-gray-300">
+                      カンパニー名
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      placeholder="カンパニー名を入力してください"
+                      className="border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500"
+                      aria-invalid={fieldState.invalid}
+                    />
+                    <FieldDescription className="text-info text-xs">
+                      カンパニー名に記号は含めないでください
+                    </FieldDescription>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+            <div className="mt-6 space-y-4">
               <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}
@@ -171,7 +183,16 @@ function Signup() {
                   "登録"
                 )}
               </Button>
-            </FieldGroup>
+              <p className="text-center text-sm text-gray-300">
+                アカウントを持っている方は
+                <Link
+                  to="/login"
+                  className="mx-1 inline-block text-yellow-500 hover:text-yellow-400 hover:underline"
+                >
+                  ログインへ
+                </Link>
+              </p>
+            </div>
           </form>
         </CardContent>
       </Card>

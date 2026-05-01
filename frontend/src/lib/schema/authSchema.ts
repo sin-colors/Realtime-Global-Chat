@@ -8,6 +8,7 @@ export const registerSchema = z
       .min(8, { message: "パスワードは８文字以上で入力してください" }),
     confirmPassword: z.string(),
     gender: z.enum(["male", "female"], { message: "性別を選択してください" }),
+    company: z.literal("というわけで", { message: "カンパニー名が違います" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "パスワードが一致しません",

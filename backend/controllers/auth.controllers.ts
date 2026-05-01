@@ -4,22 +4,30 @@ import bcrypt from "bcryptjs";
 import z from "zod";
 import generateTokenAndSetCookie from "../utils/generateToken";
 
-const signupSchema = z.object({
-  username: z.string(),
-  password: z.string().min(6),
-  confirmPassword: z.string().min(6),
-  gender: z.enum(["male", "female"], {
-    message: "性別は male または female を選択してください",
-  }),
-});
+const signupSchema = z
+  .object({
+    username: z.string(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+    gender: z.enum(["male", "female"], {
+      message: "性別は male または female を選択してください",
+    }),
+    company: z.literal("というわけで", { message: "カンパニー名が違います" }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "パスワードが一致しません",
+    path: ["confirmPassword"],
+  });
 
 export async function signup(req: Request, res: Response) {
   // console.log("Signup User");
   try {
     const validateBody = signupSchema.parse(req.body);
-    const { username, password, confirmPassword, gender } = validateBody;
-    if (password !== confirmPassword)
-      return res.status(400).json({ error: "パスワードが一致しません" });
+    const { username, password, gender } = validateBody;
+    // Zodのバリデーションでチェックするように変更
+    // パスワードが一致しない場合はparseメソッドでエラーが投げられcatchブロックに移行
+    // if (password !== confirmPassword)
+    //   return res.status(400).json({ error: "パスワードが一致しません" });
     const user = await User.findOne({ username });
     if (user)
       return res
