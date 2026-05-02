@@ -7,7 +7,11 @@ import { Navigate, Outlet } from "react-router-dom";
 function PublicRoute({ children }: { children?: ReactNode }) {
   const { authUser } = useAuthContext();
   if (authUser) return <Navigate to={"/"} replace />;
-  return children ? children : <Outlet />;
+  return (
+    <div className="flex h-full w-full items-center justify-center min-[375px]:p-4">
+      {children ? children : <Outlet />}
+    </div>
+  );
 }
 
 export default PublicRoute;
