@@ -16,3 +16,14 @@ export const registerSchema = z
   });
 
 export type RegisterType = z.infer<typeof registerSchema>;
+
+//-----------------------------------------
+
+export const loginSchema = z.object({
+  username: z.string().min(1, { message: "ユーザー名を入力してください" }),
+  password: z
+    .string()
+    .min(8, { message: "パスワードは８文字以上で入力してください" }),
+});
+
+export type LoginType = z.infer<typeof loginSchema>;

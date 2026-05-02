@@ -31,11 +31,11 @@ function Signup() {
   const { signup } = useSignup();
 
   return (
-    <div className="flex min-h-screen min-w-96 items-center justify-center p-4">
+    <div className="flex h-full w-full items-center justify-center min-[375px]:p-4">
       <Card className="w-full max-w-md border-gray-800 bg-gray-400/5 backdrop-blur-xl">
         <CardHeader>
           <CardTitle className="text-center text-3xl font-semibold text-gray-100">
-            ユーザーの作成
+            ユーザーの登録
           </CardTitle>
         </CardHeader>
         <CardContent>
