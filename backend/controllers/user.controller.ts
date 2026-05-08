@@ -26,6 +26,7 @@ export async function getUsersForSidebar(req: Request, res: Response) {
 }
 
 export function getMe(req: Request, res: Response) {
+  console.log("getMe called!");
   try {
     if (!req.user)
       return res.status(401).json({ error: "ログインしていません" });
@@ -33,10 +34,8 @@ export function getMe(req: Request, res: Response) {
   } catch (err) {
     const errorData = err instanceof Error ? err.message : err;
     console.log("getMe関数内でエラーが発生しました", errorData);
-    return res
-      .status(500)
-      .json({
-        error: "ユーザー取得中(getMe実行中)にサーバー内でエラーが発生しました",
-      });
+    return res.status(500).json({
+      error: "ユーザー取得中(getMe実行中)にサーバー内でエラーが発生しました",
+    });
   }
 }

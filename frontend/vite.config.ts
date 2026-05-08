@@ -11,4 +11,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      // "/api" から始まるリクエストを対象にする
+      "/api": {
+        target: "http://localhost:5000", // バックエンドのURL
+        changeOrigin: true, // ホストヘッダーの起点をターゲットに変更する
+        // secure: false,                // SSL証明書を検証しない場合はfalse（httpの場合は不要）
+      },
+    },
+  },
 });
