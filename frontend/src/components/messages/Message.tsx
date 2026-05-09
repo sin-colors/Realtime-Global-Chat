@@ -1,6 +1,7 @@
 import type { MessageType } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useAuthContext } from "@/context/AuthContext";
+import { extractTime } from "@/utils/extractTime";
 
 interface MessageComponentProps {
   message: MessageType;
@@ -10,13 +11,14 @@ function Message({ message }: MessageComponentProps) {
   const { authUser } = useAuthContext();
   const fromMe = message.senderId._id === authUser?._id;
   const bubbleBgColor = fromMe ? "bg-lime-200" : "bg-rose-200";
+  const formattedTime = extractTime(message.createdAt);
   return (
     <>
       {fromMe ? (
         <div className="mb-4 flex w-full items-end justify-end gap-2">
           <div className="flex shrink-0 flex-col items-end gap-1 text-xs text-white/70">
             <span>既読</span>
-            <span>{message.createdAt}</span>
+            <span>{formattedTime}</span>
           </div>
           <div
             className={`max-w-[70%] rounded-2xl ${bubbleBgColor} px-4 py-2 text-zinc-900`}
@@ -49,7 +51,7 @@ function Message({ message }: MessageComponentProps) {
             </div>
             <div className="flex shrink-0 flex-col items-start gap-1 text-xs text-white/70">
               <span>既読</span>
-              <span>{message.createdAt}</span>
+              <span>{formattedTime}</span>
             </div>
             {/* <span className="px-1 text-[10px] opacity-50">12:33</span> */}
           </div>
