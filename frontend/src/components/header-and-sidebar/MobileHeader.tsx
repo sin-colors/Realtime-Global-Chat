@@ -1,4 +1,4 @@
-import { ChevronDown, Loader2, Settings } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, Settings } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -9,18 +9,20 @@ import {
 } from "../ui/dropdown-menu";
 import LogoutButton from "./LogoutButton";
 import useGetMembers from "@/hooks/useGetMembers";
+import { useState } from "react";
 
 function MobileHeader() {
   const { data: members, isLoading, isError } = useGetMembers();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <header className="mb-2 flex items-center justify-between px-4 py-2">
       <div className="flex items-center gap-6">
         <h1 className="text-xl text-white">というわけで♪</h1>
-        <DropdownMenu>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
             <Button variant={"ghost"} className="text-white">
               メンバー
-              <ChevronDown />
+              {isOpen ? <ChevronUp /> : <ChevronDown />}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
