@@ -26,7 +26,6 @@ export async function getUsersForSidebar(req: Request, res: Response) {
 }
 
 export function getMe(req: Request, res: Response) {
-  console.log("getMe called!");
   try {
     if (!req.user)
       return res.status(401).json({ error: "ログインしていません" });

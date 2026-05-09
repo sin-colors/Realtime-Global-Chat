@@ -42,6 +42,7 @@ function MessageInput() {
           <Button
             type="submit"
             variant={"ghost"}
+            disabled={form.formState.isSubmitting}
             className="inset-y-0 inset-e-0 flex cursor-pointer items-center px-3"
           >
             {form.formState.isSubmitting ? (

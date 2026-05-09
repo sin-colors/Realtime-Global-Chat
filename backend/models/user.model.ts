@@ -1,4 +1,5 @@
-import mongoose, { InferSchemaType } from "mongoose";
+import mongoose from "mongoose";
+import type { InferSchemaType } from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
