@@ -1,10 +1,10 @@
 import { useAuthContext } from "@/context/AuthContext";
-import type { MemberType } from "@/lib/types/user";
+import type { UserTypeAtFrontend } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
 function useGetMembers() {
   const { authUser } = useAuthContext();
-  return useQuery<MemberType[]>({
+  return useQuery<UserTypeAtFrontend[]>({
     queryKey: ["members"],
     queryFn: async () => {
       const response = await fetch("/api/users");

@@ -1,8 +1,8 @@
-import type { MemberType } from "@/lib/types/user";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import type { UserTypeAtFrontend } from "@/lib/types";
 
 interface MemberProps {
-  user: MemberType;
+  user: UserTypeAtFrontend;
 }
 
 function Member({ user }: MemberProps) {

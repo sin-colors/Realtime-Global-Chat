@@ -8,6 +8,7 @@ import { Field, FieldGroup } from "../ui/field";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { Loader2, Send } from "lucide-react";
+import useSendMessage from "@/hooks/useSendMessage";
 
 function MessageInput() {
   const form = useForm<MessageInputType>({
@@ -16,8 +17,13 @@ function MessageInput() {
       text: "",
     },
   });
+  const { mutate } = useSendMessage();
   function sendMessage(values: MessageInputType) {
-    console.log(values);
+    mutate(values, {
+      onSuccess: () => {
+        form.reset(); // 送信失敗時にはメッセージをリセットしない。再入力がめんどくさいので。
+      },
+    });
   }
   return (
     <div className="bg-white/90 sm:bg-white/60">

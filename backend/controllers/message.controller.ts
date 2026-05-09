@@ -3,20 +3,20 @@ import Message from "../models/message.model";
 import z from "zod";
 
 const sendMessageSchema = z.object({
-  message: z.string(),
+  text: z.string(),
 });
 
 export async function sendMessage(req: Request, res: Response) {
   // console.log("message send");
   try {
     const validateBody = sendMessageSchema.parse(req.body);
-    const { message } = validateBody;
+    const { text } = validateBody;
     if (!req.user)
       return res.status(401).json({ error: "ログインしてください" });
     const senderId = req.user._id;
     const newMessage = new Message({
       senderId,
-      message,
+      text,
     });
     await newMessage.save();
     // 後でここにsocket.ioを追加する
@@ -43,7 +43,15 @@ export async function sendMessage(req: Request, res: Response) {
 
 export async function getMessages(req: Request, res: Response) {
   try {
-    const messages = await Message.find();
+    if (!req.user)
+      return res.status(401).json({ error: "ログインしてください" });
+    // .populate("senderId", "username profilePic")
+    // 第一引数: 展開したいフィールド名
+    // 第二引数: 取得したいフィールドの絞り込み（パスワードなどは含めない）
+    const messages = await Message.find().populate(
+      "senderId",
+      "username profilePic",
+    );
     // findメソッドはデータがないときは[]を返す
     res.status(200).json(messages);
   } catch (err) {
