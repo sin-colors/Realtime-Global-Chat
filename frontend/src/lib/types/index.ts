@@ -16,8 +16,13 @@ export interface MessageType {
     profilePic: string;
   };
   text: string;
-  // images: { url: string; publicId: string }[];
+  images: { url: string; publicId: string }[];
   // isRead: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface SendMessageProps {
+  text: string;
+  images: string[];
 }

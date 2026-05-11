@@ -1,17 +1,17 @@
-import type { MessageInputType } from "@/lib/schema/massageSchema";
-import type { MessageType } from "@/lib/types";
+// import type { MessageInputType } from "@/lib/schema/massageSchema";
+import type { MessageType, SendMessageProps } from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 function useSendMessage() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (values: MessageInputType) => {
+    mutationFn: async (payload: SendMessageProps) => {
       const response = await fetch("/api/messages/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(values),
+        body: JSON.stringify(payload),
       });
       if (!response.ok) {
         const errorData = await response.json();

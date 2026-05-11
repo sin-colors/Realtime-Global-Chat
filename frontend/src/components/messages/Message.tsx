@@ -21,9 +21,22 @@ function Message({ message }: MessageComponentProps) {
             <span>{formattedTime}</span>
           </div>
           <div
-            className={`max-w-[70%] rounded-2xl ${bubbleBgColor} px-4 py-2 text-zinc-900`}
+            className={`max-w-[70%] rounded-2xl ${bubbleBgColor} flex flex-col gap-2 text-zinc-900`}
           >
-            <p className="wrap-break-word">{message.text}</p>
+            {message.images &&
+              message.images.length > 0 &&
+              message.images.map((image) => (
+                <img
+                  key={image.publicId}
+                  src={image.url}
+                  alt="送信した画像"
+                  className="max-w-62.5 cursor-pointer rounded-2xl hover:opacity-90"
+                  onClick={() => window.open(image.url, "_blank")}
+                />
+              ))}
+            {message.text && (
+              <p className="mx-4 mb-2 wrap-break-word">{message.text}</p>
+            )}
           </div>
         </div>
       ) : (
@@ -46,7 +59,20 @@ function Message({ message }: MessageComponentProps) {
               <div
                 className={`rounded-2xl ${bubbleBgColor} px-4 py-2 text-zinc-900`}
               >
-                <p className="wrap-break-word">{message.text}</p>
+                {message.images &&
+                  message.images.length > 0 &&
+                  message.images.map((image) => (
+                    <img
+                      key={image.publicId}
+                      src={image.url}
+                      alt="送信した画像"
+                      className="max-w-62.5 cursor-pointer rounded-2xl hover:opacity-90"
+                      onClick={() => window.open(image.url, "_blank")}
+                    />
+                  ))}
+                {message.text && (
+                  <p className="mx-4 mb-2 wrap-break-word">{message.text}</p>
+                )}
               </div>
             </div>
             <div className="flex shrink-0 flex-col items-start gap-1 text-xs text-white/70">

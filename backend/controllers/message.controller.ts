@@ -1,22 +1,58 @@
 import { Request, Response } from "express";
 import Message from "../models/message.model";
 import z from "zod";
+import cloudinary from "../config/cloudinary";
 
-const sendMessageSchema = z.object({
-  text: z.string(),
-});
+interface ImagesType {
+  url: string;
+  publicId: string;
+}
+
+const sendMessageSchema = z
+  .object({
+    text: z.string(),
+    images: z.array(z.string()),
+  })
+  .refine(
+    (data) => {
+      const hasMessage = data.text.trim().length > 0;
+      const hasImages = data.images.length > 0;
+      return hasMessage || hasImages;
+    },
+    {
+      message: "テキストか画像のどちらかは必須です",
+      path: ["text"],
+    },
+  );
 
 export async function sendMessage(req: Request, res: Response) {
   // console.log("message send");
   try {
     const validateBody = sendMessageSchema.parse(req.body);
-    const { text } = validateBody;
+    const { text = "", images = [] } = validateBody;
     if (!req.user)
       return res.status(401).json({ error: "ログインしてください" });
     const senderId = req.user._id;
+
+    let imageUrls: ImagesType[] = [];
+
+    if (images !== null) {
+      const uploadPromises = images.map((image) =>
+        cloudinary.uploader.upload(image, {
+          folder: process.env.CLOUDINARY_FOLDER,
+        }),
+      );
+      const uploadResults = await Promise.all(uploadPromises);
+      // 2. アップロード後のURLを取得
+      imageUrls = uploadResults.map((result) => ({
+        url: result.secure_url,
+        publicId: result.public_id,
+      }));
+    }
     const newMessage = new Message({
       senderId,
       text,
+      images: imageUrls,
     });
     await newMessage.save();
     // 後でここにsocket.ioを追加する

@@ -9,7 +9,19 @@ const messageSchema = new mongoose.Schema(
     },
     text: {
       type: String,
-      required: true,
+      required: function () {
+        // images配列が[]で、messageが""である場合はエラーとなるようにする
+        return Array.isArray(this.images) && this.images.length === 0;
+      },
+    },
+    images: {
+      type: [
+        {
+          url: { type: String, required: true },
+          publicId: { type: String, required: true },
+        },
+      ],
+      default: [],
     },
   },
   { timestamps: true },
