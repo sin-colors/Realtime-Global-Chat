@@ -25,3 +25,5 @@ dist-ssr
 
 # 自分で後から追加したもの
 .env
+.env.development
+.env.production

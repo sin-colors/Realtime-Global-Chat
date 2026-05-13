@@ -6,11 +6,14 @@ function useSignup() {
   const queryClient = useQueryClient();
   async function signup(values: RegisterType) {
     const registerPromise = (async () => {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`,
+        {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(values),
+        },
+      );
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error);

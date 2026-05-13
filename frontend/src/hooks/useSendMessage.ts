@@ -7,12 +7,15 @@ function useSendMessage() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (payload: SendMessageProps) => {
-      const response = await fetch("/api/messages/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/messages/send`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(payload),
+        },
+      );
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error);

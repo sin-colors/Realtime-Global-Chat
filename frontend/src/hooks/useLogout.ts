@@ -5,10 +5,13 @@ function useLogout() {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error);

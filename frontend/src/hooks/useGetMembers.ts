@@ -7,7 +7,9 @@ function useGetMembers() {
   return useQuery<UserTypeAtFrontend[]>({
     queryKey: ["members"],
     queryFn: async () => {
-      const response = await fetch("/api/users");
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/users`,
+      );
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || "ユーザーの取得に失敗しました");

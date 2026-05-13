@@ -4,7 +4,7 @@ function useMarkAsRead() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async () => {
-      await fetch("/api/messages/read", {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/messages/read`, {
         method: "POST",
         credentials: "include",
       });

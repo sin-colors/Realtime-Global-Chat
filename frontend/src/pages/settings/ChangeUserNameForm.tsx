@@ -4,64 +4,33 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useAuthContext } from "@/context/AuthContext";
+import useChangeUsername from "@/hooks/useChangeUsername";
+import {
+  changeUsernameSchema,
+  type ChangeUsernameType,
+} from "@/lib/schema/userSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
-
-const schema = z.object({
-  currentUsername: z.string(),
-  newUsername: z
-    .string()
-    .min(2, { message: "ユーザー名は２文字以上で入力してください" }),
-  password: z.string().min(1, { message: "パスワードは必須です" }),
-});
-type Schema = z.infer<typeof schema>;
-
-// APIを叩く関数
-async function changeUsername(data: Schema) {
-  const response = await fetch("/api/users/change-username", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(
-      errorData.error || `通信エラーが発生しました(Status: ${response.status})`,
-    );
-  }
-  return await response.json();
-}
 
 function ChangeUsernameForm() {
   const { authUser } = useAuthContext();
-  const queryClient = useQueryClient();
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
+  // const queryClient = useQueryClient();
+  const form = useForm<ChangeUsernameType>({
+    resolver: zodResolver(changeUsernameSchema),
     defaultValues: {
       currentUsername: "",
       newUsername: "",
       password: "",
     },
   });
-  const { mutate, isPending } = useMutation({
-    mutationFn: changeUsername,
-    onSuccess: () => {
-      toast.success("ユーザー名を変更しました");
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-    },
-    onError: (error: Error) => {
-      toast.error(error.message);
-    },
-    onSettled: () => {
-      form.reset({ newUsername: "", password: "" });
-    },
-  });
-  function onSubmit(value: Schema) {
-    mutate(value);
+  const { mutate: changeUsername, isPending } = useChangeUsername();
+  function onSubmit(value: ChangeUsernameType) {
+    changeUsername(value, {
+      onSettled: () => {
+        form.reset({ newUsername: "", password: "" });
+      },
+    });
   }
   return (
     <div className="flex min-h-screen min-w-96 items-center justify-center p-4">

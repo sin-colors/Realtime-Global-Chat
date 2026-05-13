@@ -7,7 +7,9 @@ function useGetMessages() {
   return useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
-      const response = await fetch("/api/messages");
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/messages`,
+      );
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error);

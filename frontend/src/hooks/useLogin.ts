@@ -6,13 +6,16 @@ function useLogin() {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: async (values: LoginType) => {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
         },
-        body: JSON.stringify(values),
-      });
+      );
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error);

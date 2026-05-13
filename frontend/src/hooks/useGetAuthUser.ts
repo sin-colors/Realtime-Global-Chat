@@ -5,7 +5,9 @@ export function useGetAuthUser() {
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const response = await fetch("/api/users/me");
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/api/users/me`,
+        );
         if (response.status === 401) return null;
         if (!response.ok) {
           const errorData = await response.json();
