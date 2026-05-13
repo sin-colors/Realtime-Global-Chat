@@ -6,7 +6,10 @@
   "main": "backend/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "tsx watch backend/server.ts"
+    "server": "tsx watch backend/server.ts",
+    "build": "tsc",
+    "start": "node dist/backend/server.js",
+    "dev": "tsx watch backend/server.ts"
   },
   "keywords": [],
   "author": "",

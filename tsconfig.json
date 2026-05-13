@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "Node16", // ここを変更（CommonJSからNode16へ）
+    "moduleResolution": "Node16", // ここを変更（nodeからNode16へ）
+    "outDir": "./dist",
+    "rootDir": "./",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["backend/**/*.ts"],
+  "exclude": ["node_modules", "frontend"]
+}
