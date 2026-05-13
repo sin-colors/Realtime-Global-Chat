@@ -6,9 +6,18 @@ import userRoutes from "./routes/user.route";
 import connectToMongoDB from "./db/connectToMongoDB";
 import cookieParser from "cookie-parser";
 import { app, server } from "./socket/socket";
+import cors from "cors";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
+
+// 2. CORSの設定（必ずルートの定義より前に書く！）
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL, // VercelのURLを許可
+    credentials: true, // クッキー（JWT）のやり取りを許可
+  }),
+);
 
 // リクエストのbodyからJSONを取り出すために必要なミドルウェア
 // app.use(express.json());
