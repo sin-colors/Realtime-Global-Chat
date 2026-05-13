@@ -3,19 +3,23 @@ import Message from "./Message";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import useMarkAsRead from "@/hooks/useMarkAsRead";
+import useListenMessage from "@/hooks/useListenMessage";
+import useListenReadStatus from "@/hooks/useListenReadStatus";
 
 function Messages() {
   const { data: messages, isLoading, isError } = useGetMessages();
-  const messageRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const { mutate: markAsRead } = useMarkAsRead();
+  useListenMessage();
+  useListenReadStatus();
   useEffect(() => {
     if (messages && messages.length > 0) {
       markAsRead();
     }
     setTimeout(() => {
-      messageRef.current?.scrollIntoView({ behavior: "smooth" });
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
-  }, [messages, markAsRead]);
+  }, [messages?.length, markAsRead]);
   if (isLoading)
     return (
       <div className="flex h-full w-full flex-1 items-center justify-center">
@@ -37,10 +41,9 @@ function Messages() {
       )}
       {messages.length > 0 &&
         messages?.map((message) => (
-          <div key={message._id} ref={messageRef}>
-            <Message message={message} />
-          </div>
+          <Message key={message._id} message={message} />
         ))}
+      <div ref={scrollRef} />
     </div>
   );
 }

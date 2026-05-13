@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import Message from "../models/message.model";
 import z from "zod";
 import cloudinary from "../config/cloudinary";
+import { io } from "../socket/socket";
 
 interface ImagesType {
   url: string;
@@ -56,7 +57,11 @@ export async function sendMessage(req: Request, res: Response) {
       readBy: [senderId],
     });
     await newMessage.save();
-    // 後でここにsocket.ioを追加する
+    const populatedMessage = await newMessage.populate(
+      "senderId",
+      "username profilePic",
+    );
+    io.emit("newMessage", populatedMessage);
     res.status(201).json(newMessage);
   } catch (err) {
     if (err instanceof z.ZodError) {
@@ -109,11 +114,23 @@ export async function markAsRead(req: Request, res: Response) {
   if (!req.user) return res.status(401).json({ error: "ログインしてください" });
   try {
     const userId = req.user._id;
-    // まだ自分が readBy に入っていないメッセージ全てに、自分を追加する
-    await Message.updateMany(
-      { readBy: { $ne: userId } }, // 自分が既読していないメッセージ
-      { $addToSet: { readBy: userId } }, // $addToSetを使うと重複登録されない
-    );
+    // まだ自分が readBy に入っていないメッセージのIDを取得する
+    // どのメッセージが更新されたか判別するため
+    const messagesToUpdate = await Message.find({ readBy: { $ne: userId } });
+    const updateMessageIds = messagesToUpdate.map((message) => message._id);
+    if (updateMessageIds.length > 0) {
+      await Message.updateMany(
+        { _id: { $in: updateMessageIds } },
+        { $addToSet: { readBy: userId } },
+      );
+      io.emit("messagesRead", { userId, messageIds: updateMessageIds });
+    }
+    // ----既読機能をリアルタイム化する前のコード----
+    // await Message.updateMany(
+    //   { readBy: { $ne: userId } }, // 自分が既読していないメッセージ
+    //   { $addToSet: { readBy: userId } }, // $addToSetを使うと重複登録されない
+    // );
+    // ------------------------------------------
     res.status(200).json({ message: "既読にしました" });
   } catch (err) {
     const errorData = err instanceof Error ? err.message : String(err);

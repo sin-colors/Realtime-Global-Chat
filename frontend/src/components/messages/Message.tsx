@@ -76,7 +76,7 @@ function Message({ message }: MessageComponentProps) {
                     // <img
                     //   key={image.publicId}
                     //   src={image.url}
-                    //   alt="送信した画像"
+                    //   alt="受信した画像"
                     //   className="max-w-62.5 cursor-pointer rounded-2xl hover:opacity-90"
                     //   onClick={() => window.open(image.url, "_blank")}
                     // />

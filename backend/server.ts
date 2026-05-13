@@ -5,9 +5,9 @@ import messageRoutes from "./routes/message.route";
 import userRoutes from "./routes/user.route";
 import connectToMongoDB from "./db/connectToMongoDB";
 import cookieParser from "cookie-parser";
+import { app, server } from "./socket/socket";
 
 dotenv.config();
-const app = express();
 const PORT = process.env.PORT || 5000;
 
 // リクエストのbodyからJSONを取り出すために必要なミドルウェア
@@ -21,11 +21,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
-// app.get("/", (req: Request, res: Response) => {
-//   res.send("Hello world!");
-// });
-
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   connectToMongoDB();
   console.log(`Server Running on port ${PORT}`);
 });
