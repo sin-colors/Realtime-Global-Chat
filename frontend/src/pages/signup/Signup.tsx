@@ -1,3 +1,4 @@
+import PasswordInput from "@/components/PasswordInput";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -64,9 +65,8 @@ function Signup() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel className="text-gray-300">パスワード</FieldLabel>
-                  <Input
+                  <PasswordInput
                     {...field}
-                    type="password"
                     placeholder="パスワードを入力してください"
                     className="border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500"
                     aria-invalid={fieldState.invalid}
@@ -85,9 +85,8 @@ function Signup() {
                   <FieldLabel className="text-gray-300">
                     パスワードの確認
                   </FieldLabel>
-                  <Input
+                  <PasswordInput
                     {...field}
-                    type="password"
                     placeholder="パスワードを再度入力してください"
                     className="border-gray-700 bg-gray-900/50 text-white placeholder:text-gray-500"
                     aria-invalid={fieldState.invalid}
