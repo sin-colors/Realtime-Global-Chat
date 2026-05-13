@@ -9,6 +9,10 @@ function useGetMessages() {
     queryFn: async () => {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/messages`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
       );
       if (!response.ok) {
         const errorData = await response.json();

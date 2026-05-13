@@ -7,6 +7,10 @@ export function useGetAuthUser() {
       try {
         const response = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/api/users/me`,
+          {
+            method: "GET",
+            credentials: "include",
+          },
         );
         if (response.status === 401) return null;
         if (!response.ok) {

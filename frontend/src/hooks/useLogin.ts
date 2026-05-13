@@ -10,6 +10,7 @@ function useLogin() {
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },

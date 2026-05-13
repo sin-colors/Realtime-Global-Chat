@@ -10,6 +10,7 @@ function useSignup() {
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`,
         {
           method: "POST",
+          credentials: "include",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify(values),
         },

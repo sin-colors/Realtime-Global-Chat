@@ -10,6 +10,7 @@ function useChangeUsername() {
         `${import.meta.env.VITE_BACKEND_URL}/api/users/change-username`,
         {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         },

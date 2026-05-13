@@ -11,8 +11,8 @@ function useSendMessage() {
         `${import.meta.env.VITE_BACKEND_URL}/api/messages/send`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           credentials: "include",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         },
       );
