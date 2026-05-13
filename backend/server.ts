@@ -11,7 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // リクエストのbodyからJSONを取り出すために必要なミドルウェア
-app.use(express.json());
+// app.use(express.json());
+app.use(express.json({ limit: "20mb" }));
 // リクエストボディからクッキーを取り出すのに必要なミドルウェア
 app.use(cookieParser());
 

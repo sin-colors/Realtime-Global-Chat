@@ -17,7 +17,7 @@ export interface MessageType {
   };
   text: string;
   images: { url: string; publicId: string }[];
-  // isRead: boolean;
+  readBy: string[];
   createdAt: string;
   updatedAt: string;
 }

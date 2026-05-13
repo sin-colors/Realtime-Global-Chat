@@ -170,7 +170,7 @@ function MessageInput() {
             className="inset-y-0 inset-e-0 flex cursor-pointer items-center px-3"
           >
             {form.formState.isSubmitting ? (
-              <Loader2 className="h-6 w-6 animate-spin text-white" />
+              <Loader2 className="h-6 w-6 animate-spin text-slate-800" />
             ) : (
               <Send />
             )}

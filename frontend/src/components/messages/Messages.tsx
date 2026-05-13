@@ -2,24 +2,29 @@ import useGetMessages from "@/hooks/useGetMessages";
 import Message from "./Message";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef } from "react";
+import useMarkAsRead from "@/hooks/useMarkAsRead";
 
 function Messages() {
   const { data: messages, isLoading, isError } = useGetMessages();
   const messageRef = useRef<HTMLDivElement>(null);
+  const { mutate: markAsRead } = useMarkAsRead();
   useEffect(() => {
+    if (messages && messages.length > 0) {
+      markAsRead();
+    }
     setTimeout(() => {
       messageRef.current?.scrollIntoView({ behavior: "smooth" });
     }, 100);
-  }, [messages]);
+  }, [messages, markAsRead]);
   if (isLoading)
     return (
-      <div className="flex-1 overflow-auto px-4">
+      <div className="flex h-full w-full flex-1 items-center justify-center">
         <Loader2 className="h-12 w-12 animate-spin text-white" />
       </div>
     );
   if (isError || messages === undefined)
     return (
-      <div className="flex h-full flex-1 items-center justify-center overflow-auto px-4">
+      <div className="flex h-full w-full flex-1 items-center justify-center px-4">
         <p className="text-red-500">データの読み込みに失敗しました</p>
       </div>
     );

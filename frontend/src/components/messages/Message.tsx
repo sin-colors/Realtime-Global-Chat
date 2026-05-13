@@ -2,6 +2,7 @@ import type { MessageType } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useAuthContext } from "@/context/AuthContext";
 import { extractTime } from "@/utils/extractTime";
+import ImageDisplay from "./ImageDisplay";
 
 interface MessageComponentProps {
   message: MessageType;
@@ -12,31 +13,41 @@ function Message({ message }: MessageComponentProps) {
   const fromMe = message.senderId._id === authUser?._id;
   const bubbleBgColor = fromMe ? "bg-lime-200" : "bg-rose-200";
   const formattedTime = extractTime(message.createdAt);
+  const readCount = message.readBy.filter(
+    (id) => id !== message.senderId._id,
+  ).length;
   return (
     <>
       {fromMe ? (
         <div className="mb-4 flex w-full items-end justify-end gap-2">
           <div className="flex shrink-0 flex-col items-end gap-1 text-xs text-white/70">
-            <span>既読</span>
+            {readCount > 0 ? <span>既読 {readCount}</span> : <span>未読</span>}
             <span>{formattedTime}</span>
           </div>
           <div
-            className={`max-w-[70%] rounded-2xl ${bubbleBgColor} flex flex-col gap-2 text-zinc-900`}
+            className={`max-w-[70%] rounded-2xl ${bubbleBgColor} flex flex-col gap-2 overflow-hidden text-zinc-900`}
           >
             {message.images &&
               message.images.length > 0 &&
               message.images.map((image) => (
-                <img
+                // <img
+                //   key={image.publicId}
+                //   src={image.url}
+                //   alt="送信した画像"
+                //   className="h-auto w-full max-w-62.5 cursor-pointer transition-opacity hover:opacity-90"
+                //   onClick={() => window.open(image.url, "_blank")}
+                // />
+                <ImageDisplay
+                  image={image}
+                  fromMe={fromMe}
                   key={image.publicId}
-                  src={image.url}
-                  alt="送信した画像"
-                  className="max-w-62.5 cursor-pointer rounded-2xl hover:opacity-90"
-                  onClick={() => window.open(image.url, "_blank")}
                 />
               ))}
-            {message.text && (
-              <p className="mx-4 mb-2 wrap-break-word">{message.text}</p>
-            )}
+            <div className="px-4 py-2">
+              {message.text && (
+                <p className="wrap-break-word">{message.text}</p>
+              )}
+            </div>
           </div>
         </div>
       ) : (
@@ -57,26 +68,33 @@ function Message({ message }: MessageComponentProps) {
                 {message.senderId.username}
               </p>
               <div
-                className={`rounded-2xl ${bubbleBgColor} px-4 py-2 text-zinc-900`}
+                className={`rounded-2xl ${bubbleBgColor} flex flex-col gap-2 overflow-hidden text-zinc-900`}
               >
                 {message.images &&
                   message.images.length > 0 &&
                   message.images.map((image) => (
-                    <img
+                    // <img
+                    //   key={image.publicId}
+                    //   src={image.url}
+                    //   alt="送信した画像"
+                    //   className="max-w-62.5 cursor-pointer rounded-2xl hover:opacity-90"
+                    //   onClick={() => window.open(image.url, "_blank")}
+                    // />
+                    <ImageDisplay
+                      image={image}
+                      fromMe={fromMe}
                       key={image.publicId}
-                      src={image.url}
-                      alt="送信した画像"
-                      className="max-w-62.5 cursor-pointer rounded-2xl hover:opacity-90"
-                      onClick={() => window.open(image.url, "_blank")}
                     />
                   ))}
-                {message.text && (
-                  <p className="mx-4 mb-2 wrap-break-word">{message.text}</p>
-                )}
+                <div className="px-4 py-2">
+                  {message.text && (
+                    <p className="wrap-break-word">{message.text}</p>
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex shrink-0 flex-col items-start gap-1 text-xs text-white/70">
-              <span>既読</span>
+              <span>既読 {readCount}</span>
               <span>{formattedTime}</span>
             </div>
             {/* <span className="px-1 text-[10px] opacity-50">12:33</span> */}

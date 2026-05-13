@@ -53,6 +53,7 @@ export async function sendMessage(req: Request, res: Response) {
       senderId,
       text,
       images: imageUrls,
+      readBy: [senderId],
     });
     await newMessage.save();
     // 後でここにsocket.ioを追加する
@@ -101,5 +102,24 @@ export async function getMessages(req: Request, res: Response) {
     res
       .status(500)
       .json({ error: "メッセージの全件取得中にエラーが発生しました" });
+  }
+}
+
+export async function markAsRead(req: Request, res: Response) {
+  if (!req.user) return res.status(401).json({ error: "ログインしてください" });
+  try {
+    const userId = req.user._id;
+    // まだ自分が readBy に入っていないメッセージ全てに、自分を追加する
+    await Message.updateMany(
+      { readBy: { $ne: userId } }, // 自分が既読していないメッセージ
+      { $addToSet: { readBy: userId } }, // $addToSetを使うと重複登録されない
+    );
+    res.status(200).json({ message: "既読にしました" });
+  } catch (err) {
+    const errorData = err instanceof Error ? err.message : String(err);
+    console.log("markAsRead実行中にエラーが発生しました", errorData);
+    res
+      .status(500)
+      .json({ error: "既読処理中(markAsRead実行中)にエラーが発生しました" });
   }
 }
