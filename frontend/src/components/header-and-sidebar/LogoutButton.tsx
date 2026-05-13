@@ -4,7 +4,7 @@ import { Loader2, LogOut } from "lucide-react";
 function LogoutButton() {
   const { logout, isLoading } = useLogout();
   return (
-    <div className="mt-auto">
+    <div className="sm:mt-auto">
       {isLoading ? (
         <Loader2 className="h-6 w-6 animate-spin text-white" />
       ) : (

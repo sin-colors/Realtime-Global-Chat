@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user.model";
+import bcrypt from "bcryptjs";
 
 export async function getUsersForSidebar(req: Request, res: Response) {
   try {
@@ -37,4 +38,39 @@ export function getMe(req: Request, res: Response) {
       error: "ユーザー取得中(getMe実行中)にサーバー内でエラーが発生しました",
     });
   }
+}
+
+export async function changeUsername(req: Request, res: Response) {
+  console.log("change call");
+  const { newUsername, password } = req.body;
+  console.log(newUsername);
+  if (!req.user) return res.status(401).json({ error: "ログインしていません" });
+  // データベースからユーザーを取得
+  console.log("login ok");
+  const user = await User.findById(req.user._id);
+  if (user === null)
+    return res.status(400).json({ error: "ユーザーが見つかりませんでした" });
+  // パスワードの照合
+  console.log("user find");
+  const isPasswordCorrect = await bcrypt.compare(password, user.password);
+  if (!isPasswordCorrect)
+    return res.status(400).json({ error: "パスワードが正しくありません" });
+  console.log("password ok");
+  // 新しいユーザー名がすでに使われていないか確認
+  const existingUser = await User.findOne({ username: newUsername });
+  if (existingUser)
+    return res
+      .status(400)
+      .json({ error: "このユーザー名はすでに使われています" });
+  const boyProfilePic = `https://api.dicebear.com/9.x/avataaars/svg?seed=${newUsername}&top=shortFlat,shortRound,theCaesar,shaggy,shortWaved,shortCurly`;
+  const girlProfilePic = `https://api.dicebear.com/9.x/avataaars/svg?seed=${newUsername}&top=bigHair,bob,curvy,straight01,straightAndStrand`;
+  // データベースの更新
+  console.log("aa");
+  console.log(user.username);
+  user.username = newUsername;
+  console.log(user.username);
+  user.profilePic = user.gender === "male" ? boyProfilePic : girlProfilePic;
+  await user.save();
+  console.log("save after");
+  return res.status(201).json({ message: "ユーザー名を更新しました" });
 }
