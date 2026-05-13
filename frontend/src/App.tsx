@@ -7,7 +7,7 @@ import PublicRoute from "./components/PublicRoute";
 import AuthGate from "./components/AuthGate";
 import MainLayout from "./components/MainLayout";
 import Settings from "./pages/settings/Settings";
-import ChangeUserNameForm from "./pages/settings/ChangeUserNameForm";
+import ChangeUsernameForm from "./pages/settings/ChangeUsernameForm";
 
 function App() {
   return (
@@ -20,7 +20,7 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/settings" element={<Settings />}>
-              <Route path="username" element={<ChangeUserNameForm />} />
+              <Route path="username" element={<ChangeUsernameForm />} />
             </Route>
           </Route>
 
