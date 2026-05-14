@@ -23,7 +23,7 @@ function MessageInput() {
       images: null,
     },
   });
-  const { mutate } = useSendMessage();
+  const { mutate, isPending } = useSendMessage();
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   // input要素のvalueを操作（空文字にリセット）するためにinput要素の参照を保持
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -166,10 +166,10 @@ function MessageInput() {
           <Button
             type="submit"
             variant={"ghost"}
-            disabled={form.formState.isSubmitting}
+            disabled={isPending}
             className="inset-y-0 inset-e-0 flex cursor-pointer items-center px-3"
           >
-            {form.formState.isSubmitting ? (
+            {isPending ? (
               <Loader2 className="h-6 w-6 animate-spin text-slate-800" />
             ) : (
               <Send />
