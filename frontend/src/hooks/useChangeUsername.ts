@@ -6,12 +6,15 @@ function useChangeUsername() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (values: ChangeUsernameType) => {
+      const token = localStorage.getItem("chat-jwt");
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/users/change-username`,
         {
           method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify(values),
         },
       );

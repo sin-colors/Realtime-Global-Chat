@@ -10,7 +10,6 @@ function useLogin() {
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/login`,
         {
           method: "POST",
-          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
@@ -24,6 +23,7 @@ function useLogin() {
       return response.json();
     },
     onSuccess: (data) => {
+      localStorage.setItem("chat-jwt", data.token);
       queryClient.setQueryData(["authUser"], data);
     },
   });

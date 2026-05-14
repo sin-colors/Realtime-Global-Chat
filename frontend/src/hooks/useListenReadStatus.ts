@@ -16,7 +16,6 @@ function useListenReadStatus() {
           if (!oldMessages) return oldMessages;
           return oldMessages.map((message) => {
             if (messageIds.includes(message._id)) {
-              console.log("id include");
               if (!message.readBy.includes(userId)) {
                 // readBy に含まれていなければ追加
                 return { ...message, readBy: [...message.readBy, userId] };

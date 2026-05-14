@@ -1,17 +1,16 @@
 import type { RegisterType } from "@/lib/schema/authSchema";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 function useSignup() {
   const queryClient = useQueryClient();
-  async function signup(values: RegisterType) {
-    const registerPromise = (async () => {
+  const mutation = useMutation({
+    mutationFn: async (values: RegisterType) => {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/signup`,
         {
           method: "POST",
-          credentials: "include",
-          headers: { "Content-type": "application/json" },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(values),
         },
       );
@@ -19,13 +18,16 @@ function useSignup() {
         const errorData = await response.json();
         throw new Error(errorData.error);
       }
-      const signupData = await response.json();
-      // UIにログイン状態を反映するためコンテキストの値を更新する
-      // プロジェクトの設定として、コンテキストのauthUserが
-      // null → 未ログイン、userオブジェクト → ログイン済み
-      queryClient.setQueryData(["authUser"], signupData);
-      return signupData;
-    })();
+      return response.json();
+    },
+    onSuccess: (data) => {
+      localStorage.setItem("chat-jwt", data.token);
+      queryClient.setQueryData(["authUser"], data);
+    },
+  });
+
+  async function signup(values: RegisterType) {
+    const registerPromise = mutation.mutateAsync(values);
     toast.promise(registerPromise, {
       loading: "登録しています。。。",
       success: (data) => `${data.username}さんの登録が完了しました`,
@@ -34,6 +36,6 @@ function useSignup() {
     });
     await registerPromise;
   }
-  return { signup };
+  return { signup, isLoading: mutation.isPending };
 }
 export default useSignup;

@@ -9,8 +9,6 @@ function useLogout() {
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`,
         {
           method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
         },
       );
       if (!response.ok) {
@@ -20,6 +18,7 @@ function useLogout() {
       // return response.json();
     },
     onSuccess: () => {
+      localStorage.removeItem("chat-jwt");
       queryClient.setQueryData(["authUser"], null);
     },
   });
@@ -35,6 +34,42 @@ function useLogout() {
   return { logout, isLoading: mutation.isPending };
 }
 export default useLogout;
+
+//---------Cookieを使用するコード---------------
+// function useLogout() {
+//   const queryClient = useQueryClient();
+//   const mutation = useMutation({
+//     mutationFn: async () => {
+//       const response = await fetch(
+//         `${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`,
+//         {
+//           method: "POST",
+//           credentials: "include",
+//           headers: { "Content-Type": "application/json" },
+//         },
+//       );
+//       if (!response.ok) {
+//         const errorData = await response.json();
+//         throw new Error(errorData.error);
+//       }
+//       // return response.json();
+//     },
+//     onSuccess: () => {
+//       queryClient.setQueryData(["authUser"], null);
+//     },
+//   });
+//   async function logout() {
+//     const logoutPromise = mutation.mutateAsync();
+//     toast.promise(logoutPromise, {
+//       loading: "ログアウトしています。。。",
+//       success: "ログアウトしました",
+//       error: (err) => err.message || "予期せぬエラーが発生しました",
+//     });
+//     await logoutPromise;
+//   }
+//   return { logout, isLoading: mutation.isPending };
+// }
+// export default useLogout;
 
 //--------------------React QueryのuseMutationを使ってリファクタリングする前のコード----------------------
 // import { useState } from "react";

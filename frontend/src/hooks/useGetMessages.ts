@@ -7,11 +7,12 @@ function useGetMessages() {
   return useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
+      const token = localStorage.getItem("chat-jwt");
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}/api/messages`,
         {
           method: "GET",
-          credentials: "include",
+          headers: { Authorization: `Bearer ${token}` },
         },
       );
       if (!response.ok) {

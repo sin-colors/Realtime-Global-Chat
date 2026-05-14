@@ -5,11 +5,12 @@ export function useGetAuthUser() {
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
+        const token = localStorage.getItem("chat-jwt");
         const response = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/api/users/me`,
           {
             method: "GET",
-            credentials: "include",
+            headers: { Authorization: `Bearer ${token}` },
           },
         );
         if (response.status === 401) return null;
