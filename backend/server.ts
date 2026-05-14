@@ -11,7 +11,7 @@ import cors from "cors";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 
-// 2. CORSの設定（必ずルートの定義より前に書く！）
+// CORSの設定（必ずルートの定義より前に書く！）
 app.use(
   cors({
     origin: process.env.FRONTEND_URL, // VercelのURLを許可
