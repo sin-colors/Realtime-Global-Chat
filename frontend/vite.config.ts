@@ -21,4 +21,5 @@ export default defineConfig({
       },
     },
   },
+  envDir: "../", // envファイルを読み込むディレクトリをプロジェクトの「ルート」に設定する
 });

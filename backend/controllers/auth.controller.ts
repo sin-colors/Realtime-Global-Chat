@@ -163,8 +163,6 @@ const loginSchema = z.object({
 });
 
 export async function login(req: Request, res: Response) {
-  // console.log("Login User");
-  console.log(process.env.NODE_ENV);
   try {
     const validateBody = loginSchema.parse(req.body);
     const { username, password } = validateBody;
