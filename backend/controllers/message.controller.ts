@@ -3,6 +3,8 @@ import Message from "../models/message.model";
 import z from "zod";
 import cloudinary from "../config/cloudinary";
 import { io } from "../socket/socket";
+import webpush from "web-push";
+import { Subscription } from "../models/subscription.model";
 
 interface ImagesType {
   url: string;
@@ -25,6 +27,12 @@ const sendMessageSchema = z
       path: ["text"],
     },
   );
+
+webpush.setVapidDetails(
+  process.env.VAPID_EMAIL!,
+  process.env.VAPID_PUBLIC_KEY!,
+  process.env.VAPID_PRIVATE_KEY!,
+);
 
 export async function sendMessage(req: Request, res: Response) {
   // console.log("message send");
@@ -62,6 +70,28 @@ export async function sendMessage(req: Request, res: Response) {
       "username profilePic",
     );
     io.emit("newMessage", populatedMessage);
+
+    // 通知を送信する処理
+
+    // 自分以外のユーザーの通知登録情報をすべて取得
+    const subscriptions = await Subscription.find({
+      userId: { $ne: senderId },
+    });
+    const notificationPayload = JSON.stringify({
+      title: `${req.user.username}からの新着メッセージ`,
+      body: text || "画像を送信しました",
+    });
+    // 全デバイスにプッシュ送信
+    subscriptions.forEach((sub) => {
+      webpush
+        .sendNotification(sub.subscription, notificationPayload)
+        .catch((err) => {
+          if (err.statusCode === 410) {
+            Subscription.deleteOne({ _id: sub._id }).exec();
+          }
+        });
+    });
+
     res.status(201).json(newMessage);
   } catch (err) {
     if (err instanceof z.ZodError) {
