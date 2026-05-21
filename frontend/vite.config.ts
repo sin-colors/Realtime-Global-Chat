@@ -15,6 +15,10 @@ export default defineConfig({
       srcDir: "src",
       filename: "sw.ts", // カスタムService Workerファイル名
       strategies: "injectManifest",
+      devOptions: {
+        enabled: true,
+        type: "module",
+      },
       manifest: {
         name: "Company Chat",
         short_name: "Chat",

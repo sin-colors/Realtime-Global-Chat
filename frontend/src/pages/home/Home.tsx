@@ -9,7 +9,9 @@ function Home() {
   const { authUser } = useAuthContext();
   const { subscribeUser } = usePushNotification();
   useEffect(() => {
+    console.log("useEffect called");
     if (authUser) {
+      console.log("if authUser ");
       subscribeUser();
     }
   }, [authUser, subscribeUser]);

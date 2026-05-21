@@ -7,8 +7,12 @@ import { AuthContextProvider } from "./context/AuthContext.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SocketContextProvider } from "./context/SocketContext.tsx";
+import { registerSW } from "virtual:pwa-register";
 
 const queryClient = new QueryClient();
+
+// Service Worker の登録
+registerSW({ immediate: true });
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

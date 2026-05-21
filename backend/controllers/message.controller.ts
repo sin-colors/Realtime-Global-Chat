@@ -30,7 +30,7 @@ const sendMessageSchema = z
 
 webpush.setVapidDetails(
   process.env.VAPID_EMAIL!,
-  process.env.VAPID_PUBLIC_KEY!,
+  process.env.VITE_VAPID_PUBLIC_KEY!,
   process.env.VAPID_PRIVATE_KEY!,
 );
 
