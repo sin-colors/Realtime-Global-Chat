@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import useMarkAsRead from "@/hooks/useMarkAsRead";
 import useListenMessage from "@/hooks/useListenMessage";
 import useListenReadStatus from "@/hooks/useListenReadStatus";
+import DateLabel from "./DateLabel";
 
 function Messages() {
   const { data: messages, isLoading, isError } = useGetMessages();
@@ -40,8 +41,11 @@ function Messages() {
         </div>
       )}
       {messages.length > 0 &&
-        messages?.map((message) => (
-          <Message key={message._id} message={message} />
+        messages?.map((message, idx) => (
+          <div key={message._id}>
+            <DateLabel messages={messages} message={message} index={idx} />
+            <Message message={message} />
+          </div>
         ))}
       <div ref={scrollRef} />
     </div>
