@@ -1,9 +1,11 @@
 import type { ChangeUsernameType } from "@/lib/schema/userSchema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 function useChangeUsername() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: async (values: ChangeUsernameType) => {
       const token = localStorage.getItem("chat-jwt");
@@ -30,6 +32,7 @@ function useChangeUsername() {
     onSuccess: () => {
       toast.success("ユーザー名を変更しました");
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      navigate("/settings", { replace: true });
     },
     onError: (err) => {
       const errorData = err instanceof Error ? err.message : String(err);
