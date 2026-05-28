@@ -11,19 +11,11 @@ function urlBase64ToUint8Array(base64String: string) {
 
 export function usePushNotification() {
   async function subscribeUser() {
-    console.log(
-      "VITE_VAPID_PUBLIC_KEY: ",
-      import.meta.env.VITE_VAPID_PUBLIC_KEY,
-    );
-    console.log("subscribeUser called");
     const registration = await navigator.serviceWorker.ready;
-    console.log("registration after");
 
     // 通知の許可をもらう
     const permission = await Notification.requestPermission();
-    console.log("granted if before");
     if (permission !== "granted") return;
-    console.log("granted if after");
 
     // ブラウザのプッシュサーバーに登録
     const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY;

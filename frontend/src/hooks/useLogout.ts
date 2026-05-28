@@ -19,6 +19,7 @@ function useLogout() {
     },
     onSuccess: () => {
       localStorage.removeItem("chat-jwt");
+      queryClient.removeQueries({ queryKey: ["messages"] });
       queryClient.setQueryData(["authUser"], null);
     },
   });
