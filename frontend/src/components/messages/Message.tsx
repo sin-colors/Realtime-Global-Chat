@@ -90,7 +90,9 @@ function Message({ message }: MessageComponentProps) {
                   ))}
                 <div className="px-4 py-2">
                   {message.text && (
-                    <p className="wrap-break-word">{message.text}</p>
+                    <p className="wrap-break-word whitespace-pre-wrap">
+                      {message.text}
+                    </p>
                   )}
                 </div>
               </div>
