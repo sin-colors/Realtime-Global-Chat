@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { useAuthContext } from "@/context/AuthContext";
 import { extractTime } from "@/utils/extractTime";
 import ImageDisplay from "./ImageDisplay";
+import TextDisplay from "./TextDisplay";
 
 interface MessageComponentProps {
   message: MessageType;
@@ -30,26 +31,14 @@ function Message({ message }: MessageComponentProps) {
             {message.images &&
               message.images.length > 0 &&
               message.images.map((image) => (
-                // <img
-                //   key={image.publicId}
-                //   src={image.url}
-                //   alt="送信した画像"
-                //   className="h-auto w-full max-w-62.5 cursor-pointer transition-opacity hover:opacity-90"
-                //   onClick={() => window.open(image.url, "_blank")}
-                // />
                 <ImageDisplay
                   image={image}
                   fromMe={fromMe}
                   key={image.publicId}
                 />
               ))}
-            <div className="px-4 py-2">
-              {message.text && (
-                <p className="wrap-break-word whitespace-pre-wrap">
-                  {message.text}
-                </p>
-              )}
-            </div>
+
+            {message.text && <TextDisplay text={message.text} />}
           </div>
         </div>
       ) : (
@@ -61,9 +50,6 @@ function Message({ message }: MessageComponentProps) {
             />
             <AvatarFallback>未</AvatarFallback>
           </Avatar>
-          {/* <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full">
-          <img src="#" alt="avatar" />
-        </div> */}
           <div className="flex flex-1 items-end gap-2">
             <div className="flex max-w-[80%] flex-col gap-1 md:max-w-[75%]">
               <p className="text-xs text-white/70">
@@ -75,33 +61,20 @@ function Message({ message }: MessageComponentProps) {
                 {message.images &&
                   message.images.length > 0 &&
                   message.images.map((image) => (
-                    // <img
-                    //   key={image.publicId}
-                    //   src={image.url}
-                    //   alt="受信した画像"
-                    //   className="max-w-62.5 cursor-pointer rounded-2xl hover:opacity-90"
-                    //   onClick={() => window.open(image.url, "_blank")}
-                    // />
                     <ImageDisplay
                       image={image}
                       fromMe={fromMe}
                       key={image.publicId}
                     />
                   ))}
-                <div className="px-4 py-2">
-                  {message.text && (
-                    <p className="wrap-break-word whitespace-pre-wrap">
-                      {message.text}
-                    </p>
-                  )}
-                </div>
+
+                {message.text && <TextDisplay text={message.text} />}
               </div>
             </div>
             <div className="flex shrink-0 flex-col items-start gap-1 text-xs text-white/70">
               <span>既読 {readCount}</span>
               <span>{formattedTime}</span>
             </div>
-            {/* <span className="px-1 text-[10px] opacity-50">12:33</span> */}
           </div>
         </div>
       )}
